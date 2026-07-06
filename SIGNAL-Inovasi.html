@@ -109,10 +109,6 @@
         <button class="btn-admin" id="adminToggleBtn" onclick="toggleAdmin()">🔒 Admin</button>
     </div>
 
-    <div class="no-print" style="margin-top: 20px; margin-bottom: 20px;">
-        <button class="btn-cikgu" onclick="bukaDashboardCikgu()">👨‍🏫 Buka Dashboard Guru Bertugas</button>
-    </div>
-
     <div id="loginBox" class="hidden" style="background: #eaf2f8; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 2px solid var(--secondary-color); text-align: right; display: flex; align-items: center; justify-content: flex-end; gap: 10px; flex-wrap: wrap;">
         <label style="margin: 0;">Kata Laluan:</label>
         <input type="password" id="adminPass" style="width: 200px; margin: 0; padding: 8px;">
@@ -207,6 +203,10 @@
         <div id="reportArea" style="background: white; padding: 15px;">
             <div class="dashboard-section">
                 <h2>🗺️ Dashboard Admin: Status Semasa</h2>
+                 
+                <div class="no-print" style="margin-top: 20px; margin-bottom: 20px;">
+                    <button class="btn-cikgu" onclick="bukaDashboardCikgu()">👨‍🏫 Buka Dashboard Guru Bertugas</button>
+                </div>
                 
                 <div class="summary-container">
                     <div class="summary-box">Selamat<span class="text-green" id="count-hijau">0</span></div>
