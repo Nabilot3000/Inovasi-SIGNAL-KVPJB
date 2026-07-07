@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🔒 Dashboard Admin Live - Sistem HIRARC</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        /* Gaya Navigasi */
+        .navbar {
+            background-color: #2c3e50;
+            padding: 15px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .nav-btn {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 10px 20px;
+            background-color: #34495e;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+        
+
+        /* --- ANIMASI BAHARU --- */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animated-section {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        
+        button {
+            transition: all 0.3s ease !important;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        button:active {
+            transform: scale(0.95);
+        }
+        
+        .location-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .location-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Susunan Butang Atas */
+        .top-actions {
+            display: flex;
+            gap: 20px; /* Jarak antara butang */
+            justify-content: flex-end; /* Letak di sebelah kanan */
+            margin-bottom: 20px;
+        }
+
+        /* Gaya Modal (Pop-up) Guru */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6); z-index: 9999; display: flex;
+            justify-content: center; align-items: center; backdrop-filter: blur(4px);
+            opacity: 0; visibility: hidden; transition: all 0.4s ease;
+        }
+        .modal-overlay.show { opacity: 1; visibility: visible; }
+        .modal-content {
+            background: white; width: 95%; max-width: 800px; max-height: 85vh;
+            border-radius: 12px; padding: 25px; overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4); transform: translateY(-50px) scale(0.95);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .modal-overlay.show .modal-content { transform: translateY(0) scale(1); }
+        .modal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 2px solid #ecf0f1; padding-bottom: 15px; margin-bottom: 20px;
+        }
+        .modal-header h2 { margin: 0; color: #2c3e50; font-size: 1.5em; }
+        .form-select-cikgu {
+            width: 100%; padding: 12px 15px; border-radius: 8px; border: 2px solid #bdc3c7;
+            font-size: 1.1em; margin-bottom: 20px; outline: none; transition: border-color 0.3s;
+        }
+        .form-select-cikgu:focus { border-color: #3498db; }
+        .table-cikgu-wrapper { overflow-x: auto; margin-top: 20px; border-radius: 8px; border: 1px solid #ecf0f1; }
+        .cikgu-table { width: 100%; border-collapse: collapse; }
+        .cikgu-table th { background: #34495e; color: white; padding: 12px; text-align: left; white-space: nowrap; }
+        .cikgu-table td { padding: 12px; border-bottom: 1px solid #ecf0f1; }
+        .cikgu-table tr:hover { background-color: #f7f9fa; }
+        .btn-cikgu {
+            background-color: #2ecc71; color: white; padding: 10px 15px; border: none;
+            border-radius: 5px; font-size: 1em; cursor: pointer; font-weight: bold;
+        }
+        .btn-cikgu:hover { background-color: #27ae60; }
+        .refresh-btn {
+            background-color: #34495e; color: white; padding: 10px 15px; border: none;
+            border-radius: 5px; font-size: 1em; cursor: pointer; font-weight: bold;
+        }
+        .refresh-btn:hover { background-color: #2c3e50; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar no-print">
+    <a href="SIGNAL-Inovasi-Latest.html" class="nav-btn">📝 Borang SIGNAL (HIRARC)</a>
+    <a href="admin.html" class="nav-btn" style="background-color:#3498db;" >🔒 Dashboard Admin</a>
+    <a href="profil.html" class="nav-btn">👨‍🏫 Profil Guru</a>
+    <a href="panduan.html" class="nav-btn">📘 Panduan Pengguna</a>
+</nav>
+
+<div id="feedbackBox" class="feedback"></div>
+
+<div class="container animated-section">
+    <div class="header-container">
+        <h1>🗺️ Dashboard Pentadbir SIGNAL (HIRARC)</h1>
+    </div>
+
+    <div id="loginBox" style="background: #eaf2f8; padding: 30px; border-radius: 12px; margin-bottom: 20px; border: 2px solid #3498db; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+        <h3 style="margin-top: 0; color: #2c3e50;">Sila Log Masuk Pentadbir</h3>
+        <label style="display: block; margin-bottom: 10px; font-weight: bold; color: #7f8c8d;">Kata Laluan Pentadbir:</label>
+        <input type="password" id="adminPass" style="width: 250px; padding: 12px; margin-bottom: 20px; border-radius: 6px; border: 1px solid #bdc3c7; outline: none; text-align: center; font-size: 1.1em;">
+        <br>
+        <button onclick="checkAdmin()" class="btn-success" style="padding: 12px 30px; font-size: 1.1em; border-radius: 6px;">Masuk</button>
+    </div>
+
+    <div id="adminArea" class="hidden animated-section">
+        
+        <div class="top-actions no-print">
+            <button class="refresh-btn" onclick="ambilDataDariServer()">🔄 Ambil Data Terkini</button>
+            <button class="btn-danger" onclick="logKeluarAdmin()">🔓 Log Keluar</button>
+        </div>
+
+        <div id="reportArea" style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+            <div class="dashboard-section">
+                <h2>📊 Status Keselamatan Semasa</h2>
+                
+                <div class="no-print" style="margin-top: 15px; margin-bottom: 25px;">
+                    <button class="btn-cikgu" onclick="bukaDashboardCikgu()">👨‍🏫 Buka Dashboard Guru Bertugas</button>
+                </div>
+                
+                <div class="summary-container">
+                    <div class="summary-box">Selamat<span class="text-green" id="count-hijau">0</span></div>
+                    <div class="summary-box">Perhatian<span class="text-yellow" id="count-kuning">0</span></div>
+                    <div class="summary-box">Bahaya<span class="text-red" id="count-merah">0</span></div>
+                </div>
+
+                <div class="dashboard-grid" id="dashboard-grid"></div>
+
+                <div class="chart-container" style="margin-top: 30px;">
+                    <canvas id="riskChart"></canvas>
+                </div>
+            </div>
+
+            <div class="filter-bar no-print animated-section" style="margin-top: 40px; animation-delay: 0.2s;">
+                <input type="text" id="searchBar" placeholder="🔍 Cari Hazard / Aktiviti..." oninput="prosesDanPaparData()">
+                <select id="filterLokasi" onchange="prosesDanPaparData()">
+                    <option value="All">Semua Lokasi</option>
+                    <option value="Makmal 4">Makmal 4</option>
+                    <option value="Makmal 5">Makmal 5</option>
+                    <option value="Makmal 8">Makmal 8</option>
+                    <option value="Makmal 9">Makmal 9</option>
+                    <option value="Makmal 10">Makmal 10</option>
+                    <option value="Bilik Operasi JTM">Bilik Operasi JTM</option>
+                    <option value="Bilik Guru JTM">Bilik Guru JTM</option>
+                    <option value="Dewan Dagang">Dewan Dagang</option>
+                    <option value="Bilik Galeri">Bilik Galeri</option>
+                    <option value="Perpustakaan">Perpustakaan</option>
+                </select>
+            </div>
+
+            <div class="table-wrapper animated-section" id="pdfTableWrapper" style="animation-delay: 0.4s;">
+                <table id="hiracTable">
+                    <thead>
+                        <tr>
+                            <th>Lokasi</th>
+                            <th>Kerja</th>
+                            <th>Bahaya</th>
+                            <th>Kejadian</th>
+                            <th>L</th>
+                            <th>S</th>
+                            <th>Skor</th>
+                            <th>Status</th>
+                            <th>Kawalan</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="btn-group no-print animated-section" style="margin-top: 25px; animation-delay: 0.6s;">
+            <button class="btn-warning" onclick="downloadPDF()">📄 Cetak Laporan PDF</button>
+            <button style="background-color: #9b59b6; color: white;" onclick="downloadCSV()">📥 Download CSV</button>
+        </div>
+    </div>
+</div>
+
+<div id="cikguModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>📊 Dashboard Lokasi Saya</h2>
+            <button onclick="tutupCikgu()" class="btn-danger" style="width: auto; padding: 8px 15px; margin: 0;">✖️ Tutup</button>
+        </div>
+        
+        <label style="font-weight: bold; color: #34495e;">Pilih Lokasi Bertugas Anda:</label>
+        <select id="selectCikguLokasi" class="form-select-cikgu" onchange="muatDataCikgu()">
+            <option value="">-- Sila Pilih Lokasi --</option>
+            <option value="Makmal 4">Makmal 4</option>
+            <option value="Makmal 5">Makmal 5</option>
+            <option value="Makmal 8">Makmal 8</option>
+            <option value="Makmal 9">Makmal 9</option>
+            <option value="Makmal 10">Makmal 10</option>
+            <option value="Bilik Operasi JTM">Bilik Operasi JTM</option>
+            <option value="Bilik Guru JTM">Bilik Guru JTM</option>
+            <option value="Dewan Dagang">Dewan Dagang</option>
+            <option value="Bilik Galeri">Bilik Galeri</option>
+            <option value="Perpustakaan">Perpustakaan</option>
+        </select>
+        
+        <div id="cikguContent" class="hidden">
+            <div class="summary-container" style="gap: 15px;">
+                <div class="summary-box" style="border: 2px solid #e74c3c;">Bahaya (Merah)<span class="text-red" id="c-merah" style="font-size:1.5em; font-weight:bold; display:block;">0</span></div>
+                <div class="summary-box" style="border: 2px solid #f1c40f;">Perhatian (Kuning)<span class="text-yellow" id="c-kuning" style="font-size:1.5em; font-weight:bold; display:block;">0</span></div>
+            </div>
+            
+            <div class="table-cikgu-wrapper">
+                <table id="tableCikgu" class="cikgu-table">
+                    <thead>
+                        <tr>
+                            <th>Tarikh Rekod</th>
+                            <th>Punca Bahaya</th>
+                            <th>Skor</th>
+                            <th>Tindakan / Kawalan</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// URL App Script Google Sheets Anda
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxEZjZd93Wc2zO3WW46NbAZ2GgGX2ljalTNPk5UHfKvv09JiIeyn_Ixg2M7XXLvzWNC/exec'; 
+
+const ADMIN_PASSWORD = "admin";
+let riskChartInstance = null;
+let serverData = [];
+
+const senaraiLokasi = [
+    "Makmal 4", "Makmal 5", "Makmal 8", "Makmal 9", "Makmal 10",
+    "Bilik Operasi JTM", "Bilik Guru JTM", "Dewan Dagang", 
+    "Bilik Galeri", "Perpustakaan"
+];
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (sessionStorage.getItem('isAdminLogMasuk') === 'true') {
+        bukaAdminArea();
+    }
+});
+
+function checkAdmin() {
+    const pass = document.getElementById('adminPass').value;
+    if (pass === ADMIN_PASSWORD) {
+        sessionStorage.setItem('isAdminLogMasuk', 'true');
+        bukaAdminArea();
+        showFeedback("✅ Berjaya log masuk", "success");
+    } else {
+        showFeedback("❌ Kata laluan salah!", "error");
+    }
+}
+
+function bukaAdminArea() {
+    document.getElementById('adminArea').classList.remove('hidden');
+    document.getElementById('loginBox').classList.add('hidden');
+    document.getElementById('adminPass').value = "";
+    ambilDataDariServer(); 
+}
+
+function logKeluarAdmin() {
+    sessionStorage.removeItem('isAdminLogMasuk');
+    document.getElementById('adminArea').classList.add('hidden');
+    document.getElementById('loginBox').classList.remove('hidden');
+    showFeedback("ℹ️ Log keluar berjaya", "info");
+}
+
+async function ambilDataDariServer() {
+    showFeedback("⏳ Memuat turun data terkini dari Google Sheets...", "info");
+    try {
+        const response = await fetch(GOOGLE_SCRIPT_URL);
+        serverData = await response.json();
+        prosesDanPaparData();
+        showFeedback("✅ Semua data dikemas kini secara live!", "success");
+    } catch (error) {
+        showFeedback("❌ Gagal memuat turun data dari server. Periksa sambungan internet.", "error");
+        console.error(error);
+    }
+}
+
+function prosesDanPaparData() {
+    const searchQuery = document.getElementById('searchBar').value.toLowerCase();
+    const filterLokasi = document.getElementById('filterLokasi').value;
+
+    let filteredData = serverData.filter(entry => {
+        const hazard = entry.hazard ? entry.hazard.toLowerCase() : '';
+        const task = entry.task ? entry.task.toLowerCase() : '';
+        const lokasi = entry.lokasi || '';
+
+        const matchSearch = hazard.includes(searchQuery) || task.includes(searchQuery);
+        const matchLokasi = filterLokasi === "All" || lokasi === filterLokasi;
+        return matchSearch && matchLokasi;
+    });
+
+    const tbody = document.querySelector('#hiracTable tbody');
+    tbody.innerHTML = ''; 
+    
+    filteredData.forEach(entry => {
+        let riskScore = Number(entry.riskScore) || 0;
+        let badgeClass = 'bg-hijau';
+        let riskLevel = 'Selamat';
+
+        if (riskScore > 9) { badgeClass = 'bg-merah'; riskLevel = 'Bahaya!'; } 
+        else if (riskScore > 4) { badgeClass = 'bg-kuning'; riskLevel = 'Perhatian'; }
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td><strong>${entry.lokasi || '-'}</strong></td>
+            <td>${entry.task || '-'}</td>
+            <td>${entry.hazard || '-'}</td>
+            <td>${entry.consequence || '-'}</td>
+            <td>${entry.likelihood || '0'}</td>
+            <td>${entry.severity || '0'}</td>
+            <td><strong>${riskScore}</strong></td>
+            <td><span class="badge ${badgeClass}">${riskLevel}</span></td>
+            <td>${entry.control || '-'}</td>
+        `;
+        tbody.appendChild(row);
+    });
+    
+    updateDashboard(serverData); 
+}
+
+function updateDashboard(data) {
+    const grid = document.getElementById('dashboard-grid');
+    grid.innerHTML = ''; 
+
+    let countHijau = 0, countKuning = 0, countMerah = 0;
+
+    senaraiLokasi.forEach(lokasi => {
+        let rekodLokasi = data.filter(d => d.lokasi === lokasi);
+        let skorTertinggi = rekodLokasi.length > 0 ? Math.max(...rekodLokasi.map(d => Number(d.riskScore) || 0)) : 0;
+        let status, kodWarna, teksWarna;
+
+        if (skorTertinggi <= 4) { status = "status-hijau"; kodWarna = "bg-hijau"; teksWarna = skorTertinggi === 0 ? "Tiada Isu" : "Selamat"; countHijau++; } 
+        else if (skorTertinggi <= 9) { status = "status-kuning"; kodWarna = "bg-kuning"; teksWarna = "Perhatian"; countKuning++; } 
+        else { status = "status-merah"; kodWarna = "bg-merah"; teksWarna = "Bahaya!"; countMerah++; }
+
+        const card = document.createElement('div');
+        card.className = `location-card ${status}`;
+        card.innerHTML = `<h3>${lokasi}</h3><div class="badge ${kodWarna}">${teksWarna}</div><div class="score-info">Skor Max: <strong>${skorTertinggi}</strong><br><small>(${rekodLokasi.length} rekod)</small></div>`;
+        grid.appendChild(card);
+    });
+
+    document.getElementById('count-hijau').innerText = countHijau;
+    document.getElementById('count-kuning').innerText = countKuning;
+    document.getElementById('count-merah').innerText = countMerah;
+    updateChart({ hijau: countHijau, kuning: countKuning, merah: countMerah });
+}
+
+function updateChart(counts) {
+    const ctx = document.getElementById('riskChart');
+    if (riskChartInstance) riskChartInstance.destroy(); 
+    riskChartInstance = new Chart(ctx.getContext('2d'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Selamat', 'Perhatian', 'Bahaya'],
+            datasets: [{ data: [counts.hijau, counts.kuning, counts.merah], backgroundColor: ['#27ae60', '#f1c40f', '#e74c3c'] }]
+        },
+        options: { responsive: true, plugins: { legend: { position: 'bottom' } }, maintainAspectRatio: false }
+    });
+}
+
+function bukaDashboardCikgu() {
+    document.getElementById('cikguModal').classList.add('show');
+}
+
+function tutupCikgu() {
+    document.getElementById('cikguModal').classList.remove('show');
+    document.getElementById('cikguContent').classList.add('hidden');
+    document.getElementById('selectCikguLokasi').value = "";
+}
+
+function muatDataCikgu() {
+    const lokasiPilihan = document.getElementById('selectCikguLokasi').value;
+    if(!lokasiPilihan) return;
+
+    const content = document.getElementById('cikguContent');
+    const dataLokasi = serverData.filter(d => d.lokasi === lokasiPilihan);
+    
+    const tbody = document.querySelector('#tableCikgu tbody');
+    tbody.innerHTML = '';
+    let merah = 0, kuning = 0;
+
+    dataLokasi.forEach(d => {
+        let riskScore = Number(d.riskScore) || 0;
+        let badgeClass = 'bg-hijau';
+        if(riskScore > 9) { badgeClass = 'bg-merah'; merah++; }
+        else if(riskScore > 4) { badgeClass = 'bg-kuning'; kuning++; }
+
+        const tarikhFormat = d.timestamp ? new Date(d.timestamp).toLocaleDateString('ms-MY') : '-';
+
+        const row = `<tr>
+            <td>${tarikhFormat}</td>
+            <td>${d.hazard || '-'}</td>
+            <td><span class="badge ${badgeClass}">${riskScore}</span></td>
+            <td>${d.control || '-'}</td>
+        </tr>`;
+        tbody.innerHTML += row;
+    });
+
+    document.getElementById('c-merah').innerText = merah;
+    document.getElementById('c-kuning').innerText = kuning;
+    content.classList.remove('hidden');
+}
+
+function downloadCSV() {
+    if(serverData.length === 0) return showFeedback('❌ Tiada data untuk dimuat turun', 'error');
+    
+    let csvContent = "data:text/csv;charset=utf-8,\uFEFF"; 
+    csvContent += "Lokasi,Kerja,Bahaya,Kejadian,L,S,Skor,Kawalan,Tarikh\n";
+    
+    serverData.forEach(row => {
+        let rowData = [
+            `"${row.lokasi || ''}"`, `"${row.task || ''}"`, `"${row.hazard || ''}"`, 
+            `"${row.consequence || ''}"`, row.likelihood || 0, row.severity || 0, 
+            row.riskScore || 0, `"${row.control || ''}"`, `"${row.timestamp || ''}"`
+        ];
+        csvContent += rowData.join(",") + "\n";
+    });
+    
+    const link = document.createElement("a");
+    link.href = encodeURI(csvContent);
+    link.download = "Laporan_HIRAC_GoogleSheets.csv";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showFeedback('✅ CSV Berjaya dimuat turun', 'success');
+}
+
+function downloadPDF() {
+    const originalScrollPos = window.scrollY;
+    window.scrollTo(0, 0); 
+    
+    const element = document.getElementById('reportArea');
+    const tableWrapper = document.getElementById('pdfTableWrapper');
+    
+    document.querySelectorAll('.no-print').forEach(el => el.style.display = 'none');
+    
+    if (tableWrapper) {
+        tableWrapper.style.overflow = 'visible';
+        tableWrapper.style.width = '100%';
+    }
+    
+    showFeedback('⏳ Menyediakan PDF...', 'info');
+
+    const opt = {
+        margin:       [10, 10, 10, 10], 
+        filename:     'Laporan_Dashboard_HIRAC.pdf',
+        image:        { type: 'jpeg', quality: 0.98 },
+        pagebreak:    { mode: ['css', 'legacy'] }, 
+        html2canvas:  { scale: 2, useCORS: true, scrollY: 0, scrollX: 0, windowWidth: document.documentElement.offsetWidth }, 
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'landscape' } 
+    };
+
+    html2pdf().set(opt).from(element).save().then(() => {
+        document.querySelectorAll('.no-print').forEach(el => el.style.display = '');
+        if (tableWrapper) { tableWrapper.style.overflow = 'auto'; tableWrapper.style.width = ''; }
+        window.scrollTo(originalScrollPos);
+        showFeedback('✅ Laporan PDF berjaya dimuat turun', 'success');
+    }).catch(err => {
+        console.error(err);
+        document.querySelectorAll('.no-print').forEach(el => el.style.display = '');
+        showFeedback('❌ Ralat semasa menjana PDF', 'error');
+    });
+}
+
+function showFeedback(message, type) {
+    const feedbackBox = document.getElementById('feedbackBox');
+    if (!feedbackBox) return;
+    feedbackBox.innerText = message;
+    feedbackBox.className = `feedback show ${type}`;
+    const timeout = type === 'error' ? 6000 : 3000;
+    setTimeout(() => {
+        feedbackBox.classList.remove('show');
+    }, timeout);
+}
+</script>
+</body>
+</html>

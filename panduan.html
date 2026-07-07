@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>📘 PANDUAN PENGGUNA SIGNAL (HIRARC) 📘</title>
+    
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #3498db;
+            --bg-light: #f8f9fa;
+            --shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f7;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            line-height: 1.6;
+        }
+
+          /* Gaya Navigasi */
+        .navbar {
+            background-color: #2c3e50;
+            padding: 15px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            border-radius: 20px;
+        }
+        .nav-btn {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 10px 20px;
+            background-color: #34495e;
+            border-radius: 15px;
+            transition: background 0.3s;
+        }
+        .nav-btn:hover { background-color: #3498db; }
+        .hidden { display: none !important; }
+
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .header-container {
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .header-container h1 { margin: 0; font-size: 1.8em; }
+        .header-container p { margin: 10px 0 0 0; opacity: 0.9; }
+
+        /* Gaya Kad Panduan */
+        .guide-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+        }
+
+        .guide-card h2 {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--accent-color);
+            padding-bottom: 8px;
+            margin-top: 0;
+            font-size: 1.4em;
+        }
+
+        /* Langkah Langkah (Timeline Style) */
+        .steps-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .steps-list li {
+            position: relative;
+            padding-left: 40px;
+            margin-bottom: 20px;
+        }
+
+        .steps-list li::before {
+            content: attr(data-step);
+            position: absolute;
+            left: 0;
+            top: 2px;
+            width: 26px;
+            height: 26px;
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            font-weight: bold;
+            line-height: 26px;
+            font-size: 0.9em;
+        }
+
+        .steps-list strong {
+            color: #2c3e50;
+            display: block;
+            font-size: 1.1em;
+            margin-bottom: 4px;
+        }
+
+        /* Jadual Risiko */
+        .table-wrapper {
+            overflow-x: auto;
+            margin-top: 15px;
+        }
+
+        .risk-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .risk-table th {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 12px;
+        }
+
+        .risk-table td {
+            padding: 12px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        /* Badges Warna (Sama seperti CSS asal anda) */
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            color: white;
+            font-weight: bold;
+            font-size: 0.85em;
+            text-align: center;
+        }
+        .bg-hijau { background-color: #27ae60; }
+        .bg-kuning { background-color: #f1c40f; color: #2c3e50; }
+        .bg-merah { background-color: #e74c3c; }
+        .bg-ekstrim { background-color: #8e44ad; }
+
+        /* Kotak Tip / Amaran */
+        .note-box {
+            background-color: #eaf2f8;
+            border-left: 5px solid var(--accent-color);
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 15px;
+        }
+
+        .note-box.warning {
+            background-color: #fef9e7;
+            border-left-color: #f1c40f;
+        }
+
+        /* Butang Kembali */
+        .btn-back {
+            display: block;
+            width: 200px;
+            margin: 30px auto 0 auto;
+            text-align: center;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: background 0.3s;
+        }
+
+        .btn-back:hover { background-color: #1a252f; }
+
+        @media (max-width: 600px) {
+            .container { padding: 10px; margin: 15px auto; }
+            .header-container h1 { font-size: 1.4em; }
+            .guide-card { padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <a href="SIGNAL-Inovasi-Latest.html" class="nav-btn">📝 Borang SIGNAL (HIRARC)</a>
+    <a href="admin.html" class="nav-btn">🔒 Dashboard Admin</a>
+    <a href="profil.html" class="nav-btn">👨‍🏫 Profil Guru</a>
+    <a href="#" class="nav-btn active" style="background-color:#3498db;" >📘 Panduan Pengguna</a>
+</nav>
+
+<div class="container">
+    
+    <div class="header-container">
+        <h1>📘 Manual & Panduan Pengguna 📘</h1>
+        <p>Sistem Audit Pengenalpastian Bahaya, Penilaian Risiko & Kawalan Risiko (HIRARC) KVPJB</p>
+    </div>
+
+    <div class="guide-card">
+        <h2>📝 Langkah Demi Langkah Mengisi Borang</h2>
+        <ul class="steps-list">
+            <li data-step="1">
+                <strong>📍 Pilih Lokasi Audit</strong>
+                Klik menu turun bawah (dropdown) dan pilih ruang kerja, makmal, atau bilik khas yang sedang anda audit.
+            </li>
+            <li data-step="2">
+                <strong>🏭 Nama Kerja / Aktiviti</strong>
+                Masukkan jenis tugasan atau aktiviti spesifik yang sedang dijalankan secara ringkas (contoh: *Menggunakan Mesin Larik*, *Pendawaian Elektrik*).
+            </li>
+            <li data-step="3">
+                <strong>⚠️ Kenal Pasti Punca Bahaya</strong>
+                Tuliskan apa objek atau situasi di lokasi tersebut yang berisiko mendatangkan kecederaan (contoh: *Lantai basah*, *Kabel terdedah*, *Bilah tajam tanpa pelindung*).
+            </li>
+            <li data-step="4">
+                <strong>🚨 Kejadian / Impak</strong>
+                Nyatakan jenis kemalangan atau kesan buruk yang boleh terjadi jika bahaya itu tidak diendahkan (contoh: *Tergelincir*, *Renjatan elektrik*, *Jari terpotong*).
+            </li>
+            <li data-step="5">
+                <strong>📊 Kebarangkalian & Keparahan (Skala 1-5)</strong>
+                Pilih skala penilaian risiko. Nilai 1 menandakan tahap paling rendah/ringan, manakala nilai 5 menandakan tahap paling kerap berlaku atau impak kecederaan paling parah (maut).
+            </li>
+            <li data-step="6">
+                <strong>🛡️ Langkah Kawalan</strong>
+                Nyatakan tindakan pencegahan atau solusi sedia ada/cadangan bagi mengurangkan risiko berkenaan (contoh: *Memakai PPE*, *Memasang papan tanda amaran*, *Menyediakan pelindung mesin*).
+            </li>
+            <li data-step="7">
+                <strong>➕ Simpan dan Hantar Rekod</strong>
+                Klik butang **Tambah Rekod HIRAC**. Tunggu sehingga sistem memaparkan notifikasi kejayaan berwarna hijau sebelum menutup halaman.
+            </li>
+        </ul>
+    </div>
+
+    <div class="guide-card">
+        <h2>📊 Memahami Klasifikasi Skor Risiko</h2>
+        <p>Sistem ini mengira nilai risiko secara automatik dengan mendarabkan **Kebarangkalian × Keparahan**. Status risiko dibahagikan kepada 4 tahap seperti berikut:</p>
+        
+        <div class="table-wrapper">
+            <table class="risk-table">
+                <thead>
+                    <tr>
+                        <th>Julat Skor</th>
+                        <th>Tahap Risiko</th>
+                        <th>Tindakan Yang Perlu Diambil</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1 - 4</strong></td>
+                        <td><span class="badge bg-hijau">Rendah</span></td>
+                        <td>Keadaan adalah selamat. Teruskan pemantauan berkala dan kekalkan langkah kawalan sedia ada.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>5 - 9</strong></td>
+                        <td><span class="badge bg-kuning">Sederhana</span></td>
+                        <td>Perhatian diperlukan. Perlu membuat penilaian semula terhadap langkah kawalan dalam tempoh terdekat.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>10 - 16</strong></td>
+                        <td><span class="badge bg-merah">Tinggi</span></td>
+                        <td>Bahaya! Tindakan pembetulan segera mesti dirancang dan dilaksanakan untuk menurunkan tahap risiko.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>17 - 25</strong></td>
+                        <td><span class="badge bg-ekstrim">Ekstrim</span></td>
+                        <td>Bahaya Kritikal! Aktiviti kerja di lokasi tersebut mesti **dihentikan serta-merta** sehingga kawalan ketat dibuat.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="guide-card">
+        <h2>💡 Peringatan & Info Teknikal</h2>
+        
+        <div class="note-box">
+            <strong>🌐 Sambungan Internet:</strong><br>
+            Pastikan peranti anda aktif dengan data/Wi-Fi sewaktu menekan butang hantar. Penghantaran data yang berjaya akan mencetuskan notifikasi automatik ke Telegram pentadbir dan mengemaskini Google Sheets.
+        </div>
+
+        <div class="note-box warning">
+            <strong>⚠️ Mod Sandaran Luar Talian (Offline Mode):</strong><br>
+            Sekiranya talian internet terputus semasa anda menghantar borang, data akan disimpan secara setempat (*Local Storage*) di dalam peranti anda. Anda akan melihat amaran berwarna kuning. Data akan disegerakkan semula sebaik sahaja talian internet kembali stabil.
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
